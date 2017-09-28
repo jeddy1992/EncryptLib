@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
             e(new String(origin));
             e(new String(result));
             e(new String(decryptedCipherText));
+            byte[] bytes = u.AES_ECB_encrypt("Hello world!", "MZygpewJsCpRrfOr");
+            e("ndk,"+new String(bytes));
         } catch (Exception e) {
             e.printStackTrace();
         }

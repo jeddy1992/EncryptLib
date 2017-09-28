@@ -11,6 +11,10 @@ public class Uti {
     static {
         System.loadLibrary("native-lib");
     }
+
     public native String stringFromJNI();
+
     public native String stringFromJNI2();
+
+    public native byte[] AES_ECB_encrypt(String origin, String key);
 }

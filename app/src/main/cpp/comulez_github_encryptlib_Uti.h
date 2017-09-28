@@ -23,6 +23,14 @@ JNIEXPORT jstring JNICALL Java_comulez_github_encryptlib_Uti_stringFromJNI
 JNIEXPORT jstring JNICALL Java_comulez_github_encryptlib_Uti_stringFromJNI2
   (JNIEnv *, jobject);
 
+/*
+ * Class:     comulez_github_encryptlib_Uti
+ * Method:    AES_ECB_encrypt
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt
+  (JNIEnv *, jobject, jstring, jstring);
+
 #ifdef __cplusplus
 }
 #endif
