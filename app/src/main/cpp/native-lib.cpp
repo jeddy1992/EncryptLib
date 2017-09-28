@@ -11,6 +11,10 @@
 
 static void test_encrypt_ecb(void);
 
+jbyteArray as_byte_array(JNIEnv *env, unsigned char *buf, int len);
+
+unsigned char *as_unsigned_char_array(JNIEnv *env, jbyteArray array);
+
 extern "C" {
 #include "aes.h"
 }
@@ -38,10 +42,73 @@ JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encryp
     uint8_t buffer[16];
     AES_ECB_encrypt((const uint8_t *) in, (const uint8_t *) keyC, buffer, 16);
 
-    jbyteArray array = env->NewByteArray (16);
-    env->SetByteArrayRegion (array, 0, 16, reinterpret_cast<jbyte*>(buffer));
+    jbyteArray array = env->NewByteArray(16);
+    env->SetByteArrayRegion(array, 0, 16, reinterpret_cast<jbyte *>(buffer));
     return array;
 }
+
+/**
+ * 加密
+ * @param env
+ * @param instance
+ * @param originByte
+ * @param keyByte
+ * @return
+ */
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt_1byte
+        (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
+    unsigned char *originChar = as_unsigned_char_array(env, originByte);
+    unsigned char *keyByteChar = as_unsigned_char_array(env, keyByte);
+    int len = 16;
+    uint8_t buffer[len];
+    AES_ECB_encrypt(originChar, keyByteChar, buffer, len);
+    return as_byte_array(env, buffer, len);
+}
+
+/**
+ * 解密
+ * @param env
+ * @param instance
+ * @param originByte
+ * @param keyByte
+ * @return
+ */
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1decrypt_1byte
+        (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
+    unsigned char *originChar = as_unsigned_char_array(env, originByte);
+    unsigned char *keyByteChar = as_unsigned_char_array(env, keyByte);
+    int len = 16;
+    uint8_t buffer[len];
+    AES_ECB_decrypt(originChar, keyByteChar, buffer, len);
+    return as_byte_array(env, buffer, len);
+}
+
+/**
+ * unsigned char 转化为 jbyteArray 返回
+ * @param env
+ * @param buf
+ * @param len
+ * @return
+ */
+jbyteArray as_byte_array(JNIEnv *env, unsigned char *buf, int len) {
+    jbyteArray array = env->NewByteArray(len);
+    env->SetByteArrayRegion(array, 0, len, reinterpret_cast<jbyte *>(buf));
+    return array;
+}
+
+/**
+ * jbyteArray 转化为 unsigned char 返回
+ * @param env
+ * @param array
+ * @return
+ */
+unsigned char *as_unsigned_char_array(JNIEnv *env, jbyteArray array) {
+    int len = env->GetArrayLength(array);
+    unsigned char *buf = new unsigned char[len];
+    env->GetByteArrayRegion(array, 0, len, reinterpret_cast<jbyte *>(buf));
+    return buf;
+}
+
 
 static void test_encrypt_ecb(void) {
 #ifdef AES128

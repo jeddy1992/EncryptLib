@@ -31,6 +31,22 @@ JNIEXPORT jstring JNICALL Java_comulez_github_encryptlib_Uti_stringFromJNI2
 JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt
   (JNIEnv *, jobject, jstring, jstring);
 
+/*
+ * Class:     comulez_github_encryptlib_Uti
+ * Method:    AES_ECB_encrypt_byte
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt_1byte
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
+/*
+ * Class:     comulez_github_encryptlib_Uti
+ * Method:    AES_ECB_decrypt_byte
+ * Signature: ([B[B)[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1decrypt_1byte
+  (JNIEnv *, jobject, jbyteArray, jbyteArray);
+
 #ifdef __cplusplus
 }
 #endif

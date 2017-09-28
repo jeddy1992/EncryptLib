@@ -17,4 +17,8 @@ public class Uti {
     public native String stringFromJNI2();
 
     public native byte[] AES_ECB_encrypt(String origin, String key);
+
+    public native byte[] AES_ECB_encrypt_byte(byte[] origin, byte[] key);
+
+    public native byte[] AES_ECB_decrypt_byte(byte[] origin, byte[] key);
 }
