@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView tv = (TextView) findViewById(R.id.sample_text);
-        Uti u = new Uti();
+        Encrypt4C u = new Encrypt4C();
 //        tv.setText(u.stringFromJNI() + "::" + u.stringFromJNI2());
         try {
             String txt = "hello world!";
@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
             e("txt byte size=" + origin.length);
             e("key byte size=" + encryptionKey.length);
 
-            Encrypt encrypt = new Encrypt(encryptionKey);
-            byte[] result = encrypt.aesEncrypt(origin);
-            byte[] decryptedCipherText = encrypt.aesDecrypt(result);
+            Encrypt4J encrypt = new Encrypt4J();
+            byte[] result = encrypt.aesEncrypt(origin, encryptionKey);
+            byte[] decryptedCipherText = encrypt.aesDecrypt(result, encryptionKey);
             e("in java=" + new String(origin));
             e("in java=" + new String(Base64.encode(result, Base64.DEFAULT)));
             e("in java=" + new String(decryptedCipherText));

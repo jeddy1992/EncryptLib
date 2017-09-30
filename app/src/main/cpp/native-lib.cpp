@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <string>
 #include "log.h"
-#include "comulez_github_encryptlib_Uti.h"
+#include "comulez_github_encryptlib_Encrypt4C.h"
 #include <stdio.h>
 #include <stdint.h>
 
@@ -19,34 +19,6 @@ extern "C" {
 #include "aes.h"
 }
 
-JNIEXPORT jstring JNICALL Java_comulez_github_encryptlib_Uti_stringFromJNI
-        (JNIEnv *env, jobject) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
-}
-
-JNIEXPORT jstring JNICALL Java_comulez_github_encryptlib_Uti_stringFromJNI2
-        (JNIEnv *env, jobject) {
-    std::string hello = "222Hello from C++";
-    test_encrypt_ecb();
-    return env->NewStringUTF(hello.c_str());
-}
-
-JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt
-        (JNIEnv *env, jobject instance, jstring origin, jstring key) {
-    const char *in = env->GetStringUTFChars(origin, JNI_FALSE);
-    env->ReleaseStringUTFChars(origin, in);
-    const char *keyC = env->GetStringUTFChars(key, JNI_FALSE);
-    env->ReleaseStringUTFChars(key, keyC);
-
-    uint8_t buffer[16];
-    AES_ECB_encrypt((const uint8_t *) in, (const uint8_t *) keyC, buffer, 16);
-
-    jbyteArray array = env->NewByteArray(16);
-    env->SetByteArrayRegion(array, 0, 16, reinterpret_cast<jbyte *>(buffer));
-    return array;
-}
-
 /**
  * 加密
  * @param env
@@ -55,7 +27,7 @@ JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encryp
  * @param keyByte
  * @return
  */
-JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt_1byte
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Encrypt4C_AES_1ECB_1encrypt_1byte
         (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
     jsize alen = env->GetArrayLength(originByte); //获取长度
     unsigned char *originChar = as_unsigned_char_array(env, originByte);
@@ -83,7 +55,7 @@ JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encryp
  * @param keyByte
  * @return
  */
-JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1decrypt_1byte
+JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Encrypt4C_AES_1ECB_1decrypt_1byte
         (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
     jsize len = env->GetArrayLength(originByte); //获取长度
     unsigned char *originChar = as_unsigned_char_array(env, originByte);
