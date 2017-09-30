@@ -2,6 +2,7 @@ package comulez.github.encryptlib;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -15,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView tv = (TextView) findViewById(R.id.sample_text);
         Uti u = new Uti();
-        tv.setText(u.stringFromJNI() + "::" + u.stringFromJNI2());
+//        tv.setText(u.stringFromJNI() + "::" + u.stringFromJNI2());
         try {
-            String txt = "Hello world!";
+            String txt = "hello world!";
             String keyyy = "MZygpewJsCpRrfOr";
             e("加密前，txt=" + txt);
             e("加密前，key=" + keyyy);
@@ -29,14 +30,18 @@ public class MainActivity extends AppCompatActivity {
             Encrypt encrypt = new Encrypt(encryptionKey);
             byte[] result = encrypt.aesEncrypt(origin);
             byte[] decryptedCipherText = encrypt.aesDecrypt(result);
-            e(new String(origin));
-            e(new String(result));
-            e(new String(decryptedCipherText));
+            e("in java=" + new String(origin));
+            e("in java=" + new String(Base64.encode(result, Base64.DEFAULT)));
+            e("in java=" + new String(decryptedCipherText));
 
             byte[] bytes_result = u.AES_ECB_encrypt_byte(origin, encryptionKey);
-            e("ndk,加密后==" + new String(bytes_result));
-            byte[] bytes1 = u.AES_ECB_decrypt_byte(bytes_result, encryptionKey);
-            e("ndk,解密后==" + new String(bytes1));
+            byte[] bytes_result_base64 = Base64.encode(bytes_result, Base64.DEFAULT);
+            e("ndk,加密后==" + new String(bytes_result_base64));
+
+            byte[] result4wrwer = Base64.decode(bytes_result_base64, Base64.DEFAULT);
+            byte[] bytes1 = u.AES_ECB_decrypt_byte(result4wrwer, encryptionKey);
+            String dfsfsf = new String(bytes1);
+            e("ndk,解密后==" + dfsfsf);
         } catch (Exception e) {
             e.printStackTrace();
         }

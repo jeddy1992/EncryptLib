@@ -57,9 +57,19 @@ JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encryp
  */
 JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encrypt_1byte
         (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
+    jsize alen = env->GetArrayLength(originByte); //获取长度
     unsigned char *originChar = as_unsigned_char_array(env, originByte);
     unsigned char *keyByteChar = as_unsigned_char_array(env, keyByte);
-    int len = 16;
+    //originChar 正确；
+    int len;
+    if (alen % 16 == 0) {
+        int xxx = alen / 16;
+        len = (xxx) * 16;
+    } else {
+        int xxx = alen / 16;
+        len = (xxx + 1) * 16;
+    }
+    int ss = sizeof(originChar);
     uint8_t buffer[len];
     AES_ECB_encrypt(originChar, keyByteChar, buffer, len);
     return as_byte_array(env, buffer, len);
@@ -75,12 +85,19 @@ JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1encryp
  */
 JNIEXPORT jbyteArray JNICALL Java_comulez_github_encryptlib_Uti_AES_1ECB_1decrypt_1byte
         (JNIEnv *env, jobject instance, jbyteArray originByte, jbyteArray keyByte) {
+    jsize len = env->GetArrayLength(originByte); //获取长度
     unsigned char *originChar = as_unsigned_char_array(env, originByte);
     unsigned char *keyByteChar = as_unsigned_char_array(env, keyByte);
-    int len = 16;
     uint8_t buffer[len];
     AES_ECB_decrypt(originChar, keyByteChar, buffer, len);
-    return as_byte_array(env, buffer, len);
+    int realLen = 0;
+    for (int i = 0; i < len; i++) {
+        if (buffer[i] == '\0') {
+            break;
+        }
+        realLen++;
+    }
+    return as_byte_array(env, buffer, realLen);
 }
 
 /**
@@ -104,8 +121,9 @@ jbyteArray as_byte_array(JNIEnv *env, unsigned char *buf, int len) {
  */
 unsigned char *as_unsigned_char_array(JNIEnv *env, jbyteArray array) {
     int len = env->GetArrayLength(array);
-    unsigned char *buf = new unsigned char[len];
+    unsigned char *buf = new unsigned char[len+1];
     env->GetByteArrayRegion(array, 0, len, reinterpret_cast<jbyte *>(buf));
+    buf[len]='\0';
     return buf;
 }
 
